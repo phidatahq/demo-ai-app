@@ -204,8 +204,8 @@ prd_streamlit = Streamlit(
     subnets=ws_settings.subnet_ids,
     security_groups=[prd_sg],
     # To enable HTTPS, create an ACM certificate and add the ARN below:
-    # load_balancer_enable_https=True,
-    # load_balancer_certificate_arn="LOAD_BALANCER_CERTIFICATE_ARN",
+    load_balancer_enable_https=True,
+    load_balancer_certificate_arn="arn:aws:acm:us-east-1:497891874516:certificate/6598c24a-d4fc-4f17-8ee0-0d3906eb705f",
     load_balancer_security_groups=[prd_lb_sg],
     create_load_balancer=create_load_balancer,
     env_vars=container_env,
@@ -234,8 +234,8 @@ prd_fastapi = FastApi(
     subnets=ws_settings.subnet_ids,
     security_groups=[prd_sg],
     # To enable HTTPS, create an ACM certificate and add the ARN below:
-    # load_balancer_enable_https=True,
-    # load_balancer_certificate_arn="LOAD_BALANCER_CERTIFICATE_ARN",
+    load_balancer_enable_https=True,
+    load_balancer_certificate_arn="arn:aws:acm:us-east-1:497891874516:certificate/6598c24a-d4fc-4f17-8ee0-0d3906eb705f",
     load_balancer_security_groups=[prd_lb_sg],
     create_load_balancer=create_load_balancer,
     health_check_path="/v1/health",
