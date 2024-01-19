@@ -6,7 +6,7 @@ st.set_page_config(
     page_title="AI Apps",
     page_icon=":snowman:",
 )
-st.title(":snowman: AI Apps")
+st.title(":snowman: Demo AI Apps")
 st.markdown('<a href="https://github.com/phidatahq/phidata"><h4>by phidata</h4></a>', unsafe_allow_html=True)
 
 
