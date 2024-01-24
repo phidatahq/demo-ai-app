@@ -126,7 +126,7 @@ def main() -> None:
             st.session_state["knowledge_base_exists"] = True
             st.sidebar.success("Knowledge base updated")
 
-        if st.sidebar.button("Recreate Knowledge Base"):
+        if st.sidebar.button("Recreate Knowledge Base", disabled=True):
             website_assistant.knowledge_base.load(recreate=True)
             st.session_state["knowledge_base_exists"] = True
             st.sidebar.success("Knowledge base recreated")
