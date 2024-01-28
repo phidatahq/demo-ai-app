@@ -79,6 +79,10 @@ def main() -> None:
         _message = "What's Trending about AI?"
         st.session_state["messages"].append({"role": "user", "content": _message})
 
+    if st.sidebar.button("What's Trending about iPhone?"):
+        _message = "What's Trending about iPhone?"
+        st.session_state["messages"].append({"role": "user", "content": _message})
+
     if st.sidebar.button("What's Trending?"):
         _message = "What's Trending?"
         st.session_state["messages"].append({"role": "user", "content": _message})

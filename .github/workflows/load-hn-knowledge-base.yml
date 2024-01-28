@@ -3,7 +3,7 @@ on:
   schedule:
     # * is a special character in YAML so you have to quote this string.
     # /10 denotes that it will run once every 10 minutes
-    - cron: "*/10 * * * *"
+    - cron: "*/30 * * * *"
 
 jobs:
   load-knowledge-base:
