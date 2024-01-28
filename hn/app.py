@@ -75,6 +75,10 @@ def main() -> None:
     if prompt := st.chat_input():
         st.session_state["messages"].append({"role": "user", "content": prompt})
 
+    if st.sidebar.button("What are my top posts?"):
+        _message = "What are my top posts?"
+        st.session_state["messages"].append({"role": "user", "content": _message})
+
     if st.sidebar.button("What's Trending about AI?"):
         _message = "What's Trending about AI?"
         st.session_state["messages"].append({"role": "user", "content": _message})

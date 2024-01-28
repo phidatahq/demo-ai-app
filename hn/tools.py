@@ -48,8 +48,9 @@ def get_story_details(id: str) -> Optional[str]:
             "author": story.by,
             "score": story.score,
             "total_comments": story.descendants,
-            "time": story.time.isoformat(),
         }
+        if story.time:
+            story_details["time"] = story.time.isoformat()
         if story.text:
             story_details["text"] = story.text
         if story.kids and len(story.kids) > 0:
@@ -111,8 +112,9 @@ def get_item_details_by_url(url: str) -> Optional[str]:
             "type": item.item_type,
             "score": item.score,
             "total_comments": item.descendants,
-            "time": item.time.isoformat(),
         }
+        if item.time:
+            item_details["time"] = item.time.isoformat()
         if item.text:
             item_details["text"] = item.text
         if item.kids and len(item.kids) > 0:
@@ -133,7 +135,7 @@ def get_item_details_by_url(url: str) -> Optional[str]:
         return f"Error getting item details: {e}"
 
 
-def extract_story_details(story) -> Optional[dict]:
+def extract_story_details(story, fetch_comments: bool = True) -> Optional[dict]:
     try:
         story_details = {
             "id": story.item_id,
@@ -143,11 +145,10 @@ def extract_story_details(story) -> Optional[dict]:
             "type": story.item_type,
             "score": story.score,
             "total_comments": story.descendants,
-            "time": story.time.isoformat(),
         }
         if story.text:
             story_details["text"] = story.text
-        if story.kids and len(story.kids) > 0:
+        if fetch_comments and story.kids and len(story.kids) > 0:
             top_comments = []
             for kid_id in story.kids[:3]:
                 kid = hn.get_item(kid_id)
@@ -252,3 +253,44 @@ def get_new_stories(num_results: int = 10) -> Optional[str]:
         return json.dumps(new_story_details)
     except Exception as e:
         return f"Error getting new stories: {e}"
+
+
+def get_user_details(username: str) -> Optional[str]:
+    """Use this function to get the details of a Hacker News user using their username.
+
+    Args:
+        username (str): Username of the user to get details for.
+
+    Returns:
+        str: JSON string of the user details.
+    """
+
+    try:
+        user = hn.get_user(user_id=username)
+        user_details = {
+            "id": user.user_id,
+            "created": user.created.isoformat() if user.created else None,
+            "karma": user.karma,
+            "about": user.about,
+            "submitted": user.submitted,
+        }
+        if user.submitted and len(user.submitted) > 0:
+            stories = [i for i in user.submitted[:200]]
+            submitted_stories = hn.get_items_by_ids(item_ids=stories)
+            print(submitted_stories)
+            # Get top 10 stories by score
+            top_stories = sorted(submitted_stories, key=lambda x: (x.score if x.score else 0), reverse=True)[
+                :10
+            ]
+            top_story_details = []
+            for story in top_stories:
+                story_details = extract_story_details(story, fetch_comments=False)
+                if story_details:
+                    top_story_details.append(story_details)
+
+            user_details["top_stories"] = top_story_details
+
+        return json.dumps(user_details)
+    except Exception as e:
+        logger.exception(e)
+        return f"Error getting user details: {e}"

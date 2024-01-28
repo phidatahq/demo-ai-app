@@ -27,6 +27,7 @@ dependencies = [
   "types-beautifulsoup4",
   "pillow",
   "types-Pillow",
+  "tavily-python",
   # Type checking
   "mypy",
   # Testing

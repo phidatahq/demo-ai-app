@@ -1,3 +1,4 @@
+from typing import Optional
 import asyncio
 import datetime
 import json
@@ -395,7 +396,9 @@ class Item(object):
         self.title = data.get("title")
         self.parts = data.get("parts")
         self.descendants = data.get("descendants")
-        self.time = datetime.datetime.fromtimestamp(data.get("time"))
+        self.time: Optional[datetime.datetime] = None
+        if data.get("time"):
+            self.time = datetime.datetime.fromtimestamp(data.get("time"))
         self.raw = json.dumps(data)
 
     def __repr__(self):

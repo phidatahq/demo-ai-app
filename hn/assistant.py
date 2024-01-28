@@ -12,7 +12,9 @@ from hn.tools import (
     get_show_stories,
     get_ask_stories,
     get_new_stories,
+    get_user_details,
 )
+from hn.search import search_web
 from hn.storage import hn_assistant_storage
 
 
@@ -41,6 +43,8 @@ def get_hn_assistant(
             get_show_stories,
             get_ask_stories,
             get_new_stories,
+            get_user_details,
+            search_web,
         ],
         show_tool_calls=True,
         debug_mode=debug_mode,
@@ -48,9 +52,15 @@ def get_hn_assistant(
         add_datetime_to_instructions=True,
         instructions=[
             "You are made by phidata: https://github.com/phidatahq/phidata",
-            "When the user asks about a topic, search top HackerNews stories for that topic using the `search_hackernews_stories` tool. Search for atleast 10 stories."
+            f"You are interacting with the user: {user_id}",
+            "When the user asks a question, first determine if you should search the web or HackerNews for the answer.",
+            "If you need to search HackerNews, use the `search_hackernews_stories` tool. Search for atleast 10 stories."
             + " Then use the `get_story_details` tool to get the details of the most popular 3 stories.",
             "If the user asks what's trending, use the `get_top_stories` tool to get the top 5 stories.",
+            f"If the user asks about their posts, use the `get_user_details` tool with the username {user_id}.",
+            "If you need to search the web, use the `search_web` tool to search the web for the answer.",
+            "If you need to search the web, use the `search_web` tool to search the web for any query. ",
+            "Remember, you can first user the `search_web` tool to get context on the question and then use `search_hackernews_stories` to get information from HackerNews.",
             "Using this information, provide a reasoned summary for the user. Talk about the general sentiment in the comments and the popularity of the story.",
             "Always share the story score, number of comments and a link to the story if available.",
             "If the user provides a URL, use the `get_item_details_by_url` tool to get the details of the item.",
