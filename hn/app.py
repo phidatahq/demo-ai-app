@@ -12,7 +12,7 @@ from hn.assistant import get_hn_assistant
 from utils.log import logger
 
 
-st.title("HackerNews AI")
+st.title("Hacker News AI")
 st.markdown("##### :orange_heart: built using [phidata](https://github.com/phidatahq/phidata)")
 
 
@@ -33,7 +33,7 @@ def main() -> None:
         st.sidebar.info(f":technologist: User: {username}")
     else:
         st.markdown("---")
-        st.markdown("#### :technologist: Enter a username and start chatting with the HackerNews AI")
+        st.markdown("#### :technologist: Enter a username and start chatting with the Hacker News AI")
         return
 
     with st.expander(":orange[:point_down: Example Questions]"):

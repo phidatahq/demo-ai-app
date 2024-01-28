@@ -221,7 +221,7 @@ prd_streamlit = Streamlit(
 # -*- HN AI running on ECS
 hn_ai = Streamlit(
     name="hn-ai",
-    group="app",
+    group="hn",
     image=prd_image,
     command="streamlit run hn/app.py",
     port_number=8501,
@@ -288,7 +288,7 @@ prd_docker_resources = DockerResources(
 # -*- Production AwsResources
 prd_aws_resources = AwsResources(
     env=ws_settings.prd_env,
-    apps=[prd_streamlit, prd_fastapi],
+    apps=[prd_streamlit, prd_fastapi, hn_ai],
     resources=[
         prd_lb_sg,
         prd_sg,
