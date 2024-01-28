@@ -4,7 +4,6 @@ import streamlit as st
 from phi.assistant import Assistant
 from phi.tools.streamlit.components import (
     get_openai_key_sidebar,
-    check_password,
     get_username_sidebar,
 )
 
@@ -12,6 +11,10 @@ from hn.assistant import get_hn_assistant
 from utils.log import logger
 
 
+st.set_page_config(
+    page_title="Hacker News AI",
+    page_icon=":orange_heart:",
+)
 st.title("Hacker News AI")
 st.markdown("##### :orange_heart: built using [phidata](https://github.com/phidatahq/phidata)")
 
@@ -72,12 +75,12 @@ def main() -> None:
     if prompt := st.chat_input():
         st.session_state["messages"].append({"role": "user", "content": prompt})
 
-    if st.sidebar.button("What's Trending?"):
-        _message = "What's Trending?"
-        st.session_state["messages"].append({"role": "user", "content": _message})
-
     if st.sidebar.button("What's Trending about AI?"):
         _message = "What's Trending about AI?"
+        st.session_state["messages"].append({"role": "user", "content": _message})
+
+    if st.sidebar.button("What's Trending?"):
+        _message = "What's Trending?"
         st.session_state["messages"].append({"role": "user", "content": _message})
 
     if st.sidebar.button("What's on show?"):
