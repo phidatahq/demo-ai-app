@@ -24,6 +24,7 @@ dependencies = [
   "types-beautifulsoup4",
   "pillow",
   "types-Pillow",
+  "haxor",
   # Type checking
   "mypy",
   # Testing
@@ -31,7 +32,7 @@ dependencies = [
   # Linting and Formatting
   "ruff",
   # phidata
-  "phidata==2.3.5",
+  "phidata==2.3.6",
 ]
 
 [build-system]
