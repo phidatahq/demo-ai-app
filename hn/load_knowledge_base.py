@@ -3,13 +3,12 @@ import json
 from phi.document import Document
 from phi.utils.log import set_log_level_to_debug
 
-from hn_ai.knowledge import hn_knowledge_base
+from hn.api import HackerNews
+from hn.knowledge import hn_knowledge_base
 from utils.log import logger
 
 
 def load_hackernews_knowledge_base():
-    from hackernews import HackerNews
-
     hn = HackerNews()
     set_log_level_to_debug()
 
@@ -47,6 +46,7 @@ def load_hackernews_knowledge_base():
 
             documents.append(
                 Document(
+                    id=str(story.item_id),
                     name=str(story.item_id),
                     meta_data=meta_data,
                     content=json.dumps(content),
@@ -55,8 +55,8 @@ def load_hackernews_knowledge_base():
         except Exception as e:
             logger.error(f"Error creating document for story {story.item_id}: {e}")
     logger.info("Adding Documents to knowledge base...")
-    hn_knowledge_base.vector_db.delete()
-    hn_knowledge_base.load_documents(documents)
+    # hn_knowledge_base.vector_db.delete()
+    hn_knowledge_base.load_documents(documents, upsert=True)
 
 
 load_hackernews_knowledge_base()

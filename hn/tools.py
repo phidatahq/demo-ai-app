@@ -2,9 +2,9 @@ import json
 from typing import List, Optional
 
 from phi.document import Document
-from hackernews import HackerNews
 
-from hn_ai.knowledge import hn_knowledge_base
+from hn.api import HackerNews
+from hn.knowledge import hn_knowledge_base
 from utils.log import logger
 
 hn = HackerNews()
@@ -15,7 +15,7 @@ def search_hackernews_stories(topic: str, num_results: int = 15) -> Optional[str
 
     Args:
         topic (str): Topic to search for.
-        num_results (int): Number of stories to return. Defaults to 5.
+        num_results (int): Number of stories to return. Defaults to 15.
 
     Returns:
         str: JSON string of stories related to the topic.
@@ -44,7 +44,6 @@ def get_story_details(id: str) -> Optional[str]:
             "id": story.item_id,
             "title": story.title,
             "url": story.url,
-            "author": story.by,
             "type": story.item_type,
             "author": story.by,
             "score": story.score,
@@ -110,7 +109,6 @@ def get_item_details_by_url(url: str) -> Optional[str]:
             "url": item.url,
             "author": item.by,
             "type": item.item_type,
-            "author": item.by,
             "score": item.score,
             "total_comments": item.descendants,
             "time": item.time.isoformat(),
@@ -143,7 +141,6 @@ def extract_story_details(story) -> Optional[dict]:
             "url": story.url,
             "author": story.by,
             "type": story.item_type,
-            "author": story.by,
             "score": story.score,
             "total_comments": story.descendants,
             "time": story.time.isoformat(),
@@ -152,7 +149,7 @@ def extract_story_details(story) -> Optional[dict]:
             story_details["text"] = story.text
         if story.kids and len(story.kids) > 0:
             top_comments = []
-            for kid_id in story.kids[:5]:
+            for kid_id in story.kids[:3]:
                 kid = hn.get_item(kid_id)
                 kid_details = {
                     "id": kid.item_id,
@@ -191,11 +188,11 @@ def get_top_stories(num_results: int = 5) -> Optional[str]:
         return f"Error getting top stories: {e}"
 
 
-def get_show_stories(num_results: int = 5) -> Optional[str]:
+def get_show_stories(num_results: int = 10) -> Optional[str]:
     """Use this function to get the SHOW Hacker News stories.
 
     Args:
-        num_results (int): Number of stories to return. Defaults to 5.
+        num_results (int): Number of stories to return. Defaults to 10.
 
     Returns:
         str: JSON string of SHOW HN stories.
@@ -213,11 +210,11 @@ def get_show_stories(num_results: int = 5) -> Optional[str]:
         return f"Error getting show stories: {e}"
 
 
-def get_ask_stories(num_results: int = 5) -> Optional[str]:
+def get_ask_stories(num_results: int = 10) -> Optional[str]:
     """Use this function to get the ASK Hacker News stories.
 
     Args:
-        num_results (int): Number of stories to return. Defaults to 5.
+        num_results (int): Number of stories to return. Defaults to 10.
 
     Returns:
         str: JSON string of ASK HN stories.
@@ -233,3 +230,25 @@ def get_ask_stories(num_results: int = 5) -> Optional[str]:
         return json.dumps(ask_story_details)
     except Exception as e:
         return f"Error getting ask stories: {e}"
+
+
+def get_new_stories(num_results: int = 10) -> Optional[str]:
+    """Use this function to get the New stories on Hacker News.
+
+    Args:
+        num_results (int): Number of stories to return. Defaults to 10.
+
+    Returns:
+        str: JSON string of Noew HN stories.
+    """
+
+    try:
+        new_stories = hn.new_stories(limit=num_results)
+        new_story_details = []
+        for story in new_stories:
+            story_details = extract_story_details(story)
+            if story_details:
+                new_story_details.append(story_details)
+        return json.dumps(new_story_details)
+    except Exception as e:
+        return f"Error getting new stories: {e}"

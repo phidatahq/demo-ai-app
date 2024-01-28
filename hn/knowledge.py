@@ -1,11 +1,11 @@
 from phi.knowledge import AssistantKnowledge
 from phi.embedder.openai import OpenAIEmbedder
-from phi.vectordb.pgvector import PgVector
+from phi.vectordb.pgvector import PgVector2
 
 from db.session import db_url
 
 hn_knowledge_base = AssistantKnowledge(
-    vector_db=PgVector(
+    vector_db=PgVector2(
         schema="ai",
         db_url=db_url,
         collection="hn_documents",

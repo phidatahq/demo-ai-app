@@ -1,4 +1,4 @@
-from hn_ai.assistant import get_hn_assistant
+from hn.assistant import get_hn_assistant
 
 hn_assistant = get_hn_assistant(debug_mode=True)
 
