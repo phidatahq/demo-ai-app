@@ -162,5 +162,4 @@ def main() -> None:
         st.sidebar.write(f":thread: {hn_assistant_run_name}")
 
 
-if check_password():
-    main()
+main()
