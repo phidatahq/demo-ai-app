@@ -88,23 +88,42 @@ def main() -> None:
         st.session_state["messages"].append({"role": "user", "content": _message})
 
     if st.sidebar.button("What's Trending?"):
-        _message = "What's Trending?"
+        _message = "What's Trending on hackernews?"
         st.session_state["messages"].append({"role": "user", "content": _message})
 
     if st.sidebar.button("What's on show?"):
-        _message = "What are users showing?"
+        _message = "What are users showing on hackernews?"
         st.session_state["messages"].append({"role": "user", "content": _message})
 
     if st.sidebar.button("What's on ask?"):
-        _message = "What are users asking?"
+        _message = "What are users asking on hackernews?"
         st.session_state["messages"].append({"role": "user", "content": _message})
 
     if st.sidebar.button("What's new on HN?"):
         _message = "What are new stories on hackernews?"
         st.session_state["messages"].append({"role": "user", "content": _message})
 
-    if st.sidebar.button("You're awesome!"):
+    if st.sidebar.button(":orange_heart: You're awesome!"):
         _message = "You're awesome!"
+        st.session_state["messages"].append({"role": "user", "content": _message})
+
+    # Tell me about a user
+    if "summarize_user" not in st.session_state:
+        st.session_state.summarize_user = ""
+
+    def submit_user_for_summary():
+        st.session_state.summarize_user = st.session_state.summarize_user_input
+        st.session_state.summarize_user_input = ""
+
+    st.sidebar.text_input(
+        ":female-technologist: Ask about a user",
+        key="summarize_user_input",
+        placeholder="pg",
+        on_change=submit_user_for_summary,
+    )
+    if st.session_state.summarize_user != "":
+        _message = f"Tell me about this hackernews user: {st.session_state.summarize_user}"
+        st.session_state.summarize_user = ""
         st.session_state["messages"].append({"role": "user", "content": _message})
 
     # Summarize a story
@@ -116,7 +135,7 @@ def main() -> None:
         st.session_state.summarize_story_input = ""
 
     st.sidebar.text_input(
-        "Summarize a story",
+        ":scroll: Summarize a story",
         key="summarize_story_input",
         placeholder="https://news.ycombinator.com/item?id=39165080",
         on_change=submit_story_for_summary,

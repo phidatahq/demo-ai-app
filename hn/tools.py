@@ -137,6 +137,9 @@ def get_item_details_by_url(url: str) -> Optional[str]:
 
 def extract_story_details(story, fetch_comments: bool = True) -> Optional[dict]:
     try:
+        if story.title is None:
+            return None
+
         story_details = {
             "id": story.item_id,
             "title": story.title,
@@ -272,12 +275,11 @@ def get_user_details(username: str) -> Optional[str]:
             "created": user.created.isoformat() if user.created else None,
             "karma": user.karma,
             "about": user.about,
-            "submitted": user.submitted,
+            "total_items_submitted": len(user.submitted),
         }
         if user.submitted and len(user.submitted) > 0:
-            stories = [i for i in user.submitted[:200]]
-            submitted_stories = hn.get_items_by_ids(item_ids=stories)
-            print(submitted_stories)
+            top_submitted = [i for i in user.submitted[:200]]
+            submitted_stories = hn.get_items_by_ids(item_ids=top_submitted, item_type="story")
             # Get top 10 stories by score
             top_stories = sorted(submitted_stories, key=lambda x: (x.score if x.score else 0), reverse=True)[
                 :10
@@ -289,6 +291,21 @@ def get_user_details(username: str) -> Optional[str]:
                     top_story_details.append(story_details)
 
             user_details["top_stories"] = top_story_details
+
+            submitted_comments = hn.get_items_by_ids(item_ids=top_submitted, item_type="comment")
+            # Get latest 10 comments
+            latest_comment_details = []
+            for comment in submitted_comments[:10]:
+                comment_details = {
+                    "text": comment.text,
+                    "time": comment.time.isoformat() if comment.time else None,
+                    "type": "comment",
+                }
+                if comment.score:
+                    comment_details["score"] = comment.score
+                latest_comment_details.append(comment_details)
+
+            user_details["latest_comments"] = latest_comment_details
 
         return json.dumps(user_details)
     except Exception as e:
